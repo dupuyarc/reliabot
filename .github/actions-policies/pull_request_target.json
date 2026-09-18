@@ -1,0 +1,30 @@
+{
+  "id": 4657,
+  "name": "pull_request_target",
+  "target": "actions",
+  "source_type": "Repository",
+  "source": "dupuy/reliabot",
+  "enforcement": "disabled",
+  "conditions": {
+    "workflow_path": {
+      "exclude": [],
+      "include": [
+        ".github/workflows/assign-labels.yaml",
+        ".github/workflows/cancel-pending-approval.yaml",
+        ".github/workflows/notify-forks-on-pr-close.yaml"
+      ]
+    }
+  },
+  "rules": [
+    {
+      "type": "require_lockfile"
+    },
+    {
+      "type": "restrict_action_events",
+      "parameters": {
+        "allowed_events": ["pull_request_target"]
+      }
+    }
+  ],
+  "bypass_actors": []
+}
