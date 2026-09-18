@@ -1,5 +1,5 @@
-# Adapted from https://github.com/codacy/codacy-coverage-reporter-action and
-# extended to upload to GitHub as well.
+# This workflow is managed by gh actions-lock.
+# Source repository: https://github.com/codacy/codacy-coverage-reporter-action/blob/master/README.md#uploading-coverage-to-codacy
 
 name: 'Coverage Reporter'
 
@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-26.04
     permissions:
       contents: read
-      actions: read # Needed to download artifacts
+      actions: read # Needed to download artifacts from another workflow
       code-quality: write
     # Only run on primary fork, since this requires a Codacy project token
     if: >
@@ -26,7 +26,7 @@ jobs:
       github.repository == 'dupuy/reliabot'
     steps:
       - name: 'Harden runner'
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@v2.21.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -43,19 +43,20 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
           GH_RUN_ID: ${{ github.event.workflow_run.id }}
+        # Use gh CLI as actions/download-artifact defaults to same workflow only
         run: |
           gh run download "$GH_RUN_ID" --name coverage-report
 
       - name: 'Upload coverage to Codacy'
-        uses: step-security/codacy-coverage-reporter-action@44e97cd9a5e5328b79a4fd414746d6b074da1411 # v1.3.0
+        uses: step-security/codacy-coverage-reporter-action@v1.3.0
+        continue-on-error: true # Codacy failure must not block GitHub upload
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-          continue-on-error: true # Codacy failure must not block GitHub upload
           coverage-reports: 'cobertura.xml'
           language: Python
 
       - name: 'Upload coverage to GitHub Code Quality'
-        uses: actions/upload-code-coverage@d8e329117199404bba6fc81efe8093dc7c015e34 # v1.4.2
+        uses: actions/upload-code-coverage@v1.4.2
         with:
           file: cobertura.xml
           label: 'code-coverage/tox'

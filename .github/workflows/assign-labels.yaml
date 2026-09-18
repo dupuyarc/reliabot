@@ -1,3 +1,4 @@
+# This workflow is managed by gh actions-lock.
 # This workflow assigns labels to PRs based on conventional commit titles.
 
 # It looks at the commits in a pull request, mapping their commit types
@@ -30,7 +31,7 @@ jobs:
       pull-requests: write
     steps:
       - name: 'Harden runner'
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@v2.21.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -38,7 +39,7 @@ jobs:
             api.github.com:443
 
       - name: 'Assign labels'
-        uses: dupuy/action-assign-labels@441d2f8960b781df4abf3b66e13473a47d893f50 # v2.6.1
+        uses: dupuy/action-assign-labels@v2.6.1
         with:
           apply-changes: true
           conventional-commits: |

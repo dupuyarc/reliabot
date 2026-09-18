@@ -1,3 +1,5 @@
+# This workflow is managed by gh actions-lock.
+
 name: Cancel jobs pending approval on a PR close
 # This is intended to prevent GHA jobs from sitting around for 30 days waiting
 # for an approval that would only come too late. It does create problems it you
@@ -16,7 +18,7 @@ jobs:
     runs-on: ubuntu-26.04
     steps:
       - name: 'Harden runner'
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@v2.21.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -24,7 +26,7 @@ jobs:
             api.github.com:443
 
       - name: 'Cancel jobs pending approval'
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        uses: actions/github-script@v9.0.0
         with:
           script: |
             const head_sha = context.payload.pull_request.head.sha;
